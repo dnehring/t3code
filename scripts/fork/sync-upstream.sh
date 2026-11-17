@@ -48,7 +48,7 @@ git switch --quiet -C "$sync_branch" "$FORK_BRANCH"
 
 echo "Merging ${ref} into ${sync_branch} (from ${FORK_BRANCH})..."
 merge_ok=1
-git merge --no-ff --no-edit -m "chore(fork): merge upstream ${ref}" "$ref" || merge_ok=0
+git merge --no-ff --no-edit --no-stat -m "chore(fork): merge upstream ${ref}" "$ref" || merge_ok=0
 
 echo
 echo "Fork seams upstream changed since the last sync:"
