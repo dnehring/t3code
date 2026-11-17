@@ -6,12 +6,12 @@ The goal is that merging a new upstream release takes minutes. Every rule below 
 
 ## Branches
 
-| Branch | Purpose |
-| --- | --- |
-| `main` | Exact mirror of `upstream/main`. Never commit to it. The sync script fast-forwards it. |
-| `fork/main` | Integration branch: an upstream release plus the fork's changes. Build from here. |
-| `fork/<feature>` | Feature work. Branch from `fork/main` and merge back into it. |
-| `fork/sync-<tag>` | Throwaway branch the sync script creates for each upstream merge. |
+| Branch            | Purpose                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| `main`            | Exact mirror of `upstream/main`. Never commit to it. The sync script fast-forwards it. |
+| `fork/main`       | Integration branch: an upstream release plus the fork's changes. Build from here.      |
+| `fork/<feature>`  | Feature work. Branch from `fork/main` and merge back into it.                          |
+| `fork/sync-<tag>` | Throwaway branch the sync script creates for each upstream merge.                      |
 
 `fork/main` tracks stable upstream tags (`vX.Y.Z`), not nightly `main`. It started from `v0.1.10`.
 
@@ -82,9 +82,17 @@ With no releases published on the fork, the app finds no updates. Signing is a s
 
 ## Fork features
 
-| Feature | Status | Fork paths | Upstream seams |
-| --- | --- | --- | --- |
-| `tts`: ElevenLabs playback of assistant messages | Planned | `apps/web/src/fork/tts/`, `apps/server/src/fork/tts/` | To be listed as they're added |
+| Feature                                          | Status        | Fork paths                                                                                  | Upstream seams                                                                                                                                                                                                                                    |
+| ------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tts`: ElevenLabs playback of assistant messages | Working (dev) | `packages/contracts/src/fork/tts.ts`, `apps/server/src/fork/tts/`, `apps/web/src/fork/tts/` | `packages/contracts/src/index.ts` (1 line), `packages/contracts/src/environmentHttp.ts` (import, group, `.add`), `apps/server/src/server.ts` (import, `Layer.provide`), `apps/web/src/components/chat/TimelineAssistantRows.tsx` (import, button) |
+
+### `tts` notes
+
+- The ElevenLabs key is stored in the server secret store as `fork-tts-elevenlabs-api-key.bin`. The voice and model are stored as `fork-tts-elevenlabs-config.bin`. Neither touches `settings.json`.
+- The browser never sees the key. It calls the fork's `forkTts` API group on its own environment, with the same auth as every other endpoint, and the server calls ElevenLabs.
+- Messages are converted to speakable text (code blocks are announced, not read), split into chunks of up to 2,500 characters, and played in order with the next chunk prefetched. The first chunk is kept short so audio starts quickly.
+- Recent chunks are cached in the browser, so replaying a message doesn't spend characters twice. Changing the voice or model clears the cache.
+- UI strings are English only and aren't added to the translation catalogs, which keeps them out of the files that conflict on every sync.
 
 ## Offering features upstream
 

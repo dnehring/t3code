@@ -22,6 +22,7 @@ import {
   useQuietThreadShell,
 } from "../../state/entities";
 import { MessageCopyButton } from "./MessageCopyButton";
+import { MessageSpeakButton } from "~/fork/tts/MessageSpeakButton"; // FORK(tts)
 import { AssistantCitationSource } from "./AssistantCitationSource";
 import { resolveAssistantMessageCopyState } from "./MessagesTimeline.logic";
 import { Tooltip, TooltipPopup, TooltipTrigger } from "../ui/tooltip";
@@ -243,6 +244,13 @@ function AssistantMessageMeta({
         message={message}
         showCopyButton={showCopyButton}
         streaming={copyStreaming}
+      />
+      {/* FORK(tts): read the message aloud */}
+      <MessageSpeakButton
+        messageKey={message.id}
+        text={message.text}
+        streaming={copyStreaming || message.streaming}
+        environmentId={ctx.activeThreadEnvironmentId}
       />
       {projectedItem?.item.type === "assistant_message" ? (
         <AssistantForkButton projectedItem={projectedItem} />

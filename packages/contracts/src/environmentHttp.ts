@@ -8,6 +8,7 @@ import * as HttpApiMiddleware from "effect/http-api/HttpApiMiddleware";
 import * as HttpApiSchema from "effect/http-api/HttpApiSchema";
 import * as HttpServerRespondable from "effect/http/HttpServerRespondable";
 import * as HttpServerResponse from "effect/http/HttpServerResponse";
+import { makeForkTtsHttpApi } from "./fork/tts.ts"; // FORK(tts): fork-only API group
 
 import {
   AuthAccessTokenResult,
@@ -1063,7 +1064,13 @@ class EnvironmentWebhooksHttpApi extends HttpApiGroup.make("webhooks")
   .add(HttpApiEndpoint.patch("webhookPatch", WEBHOOK_PATH, webhookEndpoint))
   .add(HttpApiEndpoint.get("webhookGet", WEBHOOK_PATH, webhookEndpoint)) {}
 
+// FORK(tts): fork-only API group, authenticated like every other group. See FORK.md.
+const ForkTtsHttpApi = makeForkTtsHttpApi(EnvironmentScopedOperationErrors).middleware(
+  EnvironmentAuthenticatedAuth,
+);
+
 export class EnvironmentHttpApi extends HttpApi.make("environment")
+  .add(ForkTtsHttpApi) // FORK(tts)
   .add(EnvironmentMetadataHttpApi)
   .add(EnvironmentAuthHttpApi)
   .add(EnvironmentMcpOAuthHttpApi)
