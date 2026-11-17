@@ -1311,7 +1311,8 @@ export function VoiceSettingsPanel() {
         "speech-correction-word": cleanupEnabled ? undefined : "speech-post-processing",
       }}
     >
-      <ReadAloudSettings /> {/* FORK(tts) */}
+      {/* FORK(tts): ElevenLabs read aloud settings */}
+      <ReadAloudSettings />
       <SettingsSection id="voice-input" title="Input">
         <SettingsRow
           {...searchableSetting("voice-microphone")}
@@ -1376,6 +1377,7 @@ export function VoiceSettingsPanel() {
           }
         />
       </SettingsSection>
+
       <SettingsSection id="voice-transcription" title="Transcription">
         <SettingsRow
           {...searchableSetting("voice-transcription-destination")}
@@ -1607,6 +1609,7 @@ export function VoiceSettingsPanel() {
         ) : null}
         {prepared && <AdvancedSpeechSettings prepared={prepared} catalog={catalog} />}
       </SettingsSection>
+
       <SettingsSection id="voice-dictionary" title="Dictionary">
         <SettingsRow
           {...searchableSetting("speech-dictionary")}
@@ -1623,6 +1626,7 @@ export function VoiceSettingsPanel() {
         </SettingsRow>
         <ProjectDictionaryRow />
       </SettingsSection>
+
       <SettingsSection id={searchableSetting("speech-post-processing").id} title="Cleanup">
         <SettingsRow
           title="Clean up transcripts"
