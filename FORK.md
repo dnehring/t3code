@@ -82,11 +82,15 @@ With no releases published on the fork, the app finds no updates. Signing is a s
 
 ## Fork features
 
-| Feature                                          | Status        | Fork paths                                                                                  | Upstream seams                                                                                                                                                                                                                                    |
-| ------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tts`: ElevenLabs playback of assistant messages | Working (dev) | `packages/contracts/src/fork/tts.ts`, `apps/server/src/fork/tts/`, `apps/web/src/fork/tts/` | `packages/contracts/src/index.ts` (1 line), `packages/contracts/src/environmentHttp.ts` (import, group, `.add`), `apps/server/src/server.ts` (import, `Layer.provide`), `apps/web/src/components/chat/TimelineAssistantRows.tsx` (import, button) |
+| Feature                                          | Status        | Fork paths                                                                                  | Upstream seams                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `tts`: ElevenLabs playback of assistant messages | Working (dev) | `packages/contracts/src/fork/tts.ts`, `apps/server/src/fork/tts/`, `apps/web/src/fork/tts/` | `packages/contracts/src/index.ts` (1 line), `packages/contracts/src/environmentHttp.ts` (import, group, `.add`), `apps/server/src/server.ts` (import, `Layer.provide`), `apps/web/src/components/chat/TimelineAssistantRows.tsx` (import, button), `apps/web/src/components/settings/VoiceSettingsPanel.tsx` (import, section) |
 
 ### `tts` notes
+
+- Playback only starts from the Read aloud button on a response. Nothing is read automatically.
+- The voice can be changed in two places: the chevron menu next to each response's Read aloud button, and Settings > Voice > Read aloud. The Settings section also holds the API key and model. Both read the same per-environment state, so a change in one shows up in the other. Switching voices while a message is playing restarts it in the new voice.
+- ElevenLabs is the only engine. There's no source picker.
 
 - The ElevenLabs key is stored in the server secret store as `fork-tts-elevenlabs-api-key.bin`. The voice and model are stored as `fork-tts-elevenlabs-config.bin`. Neither touches `settings.json`.
 - The browser never sees the key. It calls the fork's `forkTts` API group on its own environment, with the same auth as every other endpoint, and the server calls ElevenLabs.

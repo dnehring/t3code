@@ -122,6 +122,7 @@ import { toastManager } from "../ui/toast";
 import { MicrophoneOrderList } from "./MicrophoneOrderList";
 import { MicrophoneTest } from "./MicrophoneTest";
 import { CloudVoiceConfiguration } from "./CloudVoiceConfiguration";
+import { ReadAloudSettings } from "~/fork/tts/ReadAloudSettings"; // FORK(tts)
 import { ModelBenchmarks, orderSpeechLanguages } from "./SpeechModelComparison";
 import { languageLabel, SpeechLanguageSelect } from "./SpeechLanguageSelect";
 import { filterSpeechModels, type SpeechModelSort } from "./speechModelBrowser";
@@ -1310,6 +1311,7 @@ export function VoiceSettingsPanel() {
         "speech-correction-word": cleanupEnabled ? undefined : "speech-post-processing",
       }}
     >
+      <ReadAloudSettings /> {/* FORK(tts) */}
       <SettingsSection id="voice-input" title="Input">
         <SettingsRow
           {...searchableSetting("voice-microphone")}
@@ -1374,7 +1376,6 @@ export function VoiceSettingsPanel() {
           }
         />
       </SettingsSection>
-
       <SettingsSection id="voice-transcription" title="Transcription">
         <SettingsRow
           {...searchableSetting("voice-transcription-destination")}
@@ -1606,7 +1607,6 @@ export function VoiceSettingsPanel() {
         ) : null}
         {prepared && <AdvancedSpeechSettings prepared={prepared} catalog={catalog} />}
       </SettingsSection>
-
       <SettingsSection id="voice-dictionary" title="Dictionary">
         <SettingsRow
           {...searchableSetting("speech-dictionary")}
@@ -1623,7 +1623,6 @@ export function VoiceSettingsPanel() {
         </SettingsRow>
         <ProjectDictionaryRow />
       </SettingsSection>
-
       <SettingsSection id={searchableSetting("speech-post-processing").id} title="Cleanup">
         <SettingsRow
           title="Clean up transcripts"
